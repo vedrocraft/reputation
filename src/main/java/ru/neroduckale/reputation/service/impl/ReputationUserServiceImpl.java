@@ -81,6 +81,4 @@ public class ReputationUserServiceImpl implements ReputationUserService {
         user.setReputation(user.getReputation() - amount);
         save(user);
     }
-
-
 }

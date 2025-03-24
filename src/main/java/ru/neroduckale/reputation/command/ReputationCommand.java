@@ -33,7 +33,6 @@ public class ReputationCommand {
     @Execute(name = "add")
     @Permission("reputation.add")
     void addReputation(@Context CommandSender sender, @Arg("игрок") Player target, @Arg("количество") int amount) {
-
         userService.addReputation(target.getName(), amount);
         PlayerUtil.sendMessage(sender, ((String) configService.get("successful-added-reputation-message"))
                 .replace("{user}", target.getName())

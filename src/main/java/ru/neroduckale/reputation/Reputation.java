@@ -47,8 +47,6 @@ public final class Reputation extends JavaPlugin implements BaseCommons {
                         getService(ReputationUserService.class))
                 )
                 .build();
-
-
     }
 
     @Override

@@ -28,10 +28,12 @@ public class MuteListener implements Listener {
 
     @EventHandler
     public void onPickup(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        if (userService.getUser(player.getName()).getReputation() > 1500) return;
-        Material itemType = event.getItem().getItemStack().getType();
+        if (!(event.getEntity() instanceof Player player)
+                || userService.getUser(player.getName()).getReputation() > 1500) {
+            return;
+        }
 
+        Material itemType = event.getItem().getItemStack().getType();
         if (itemType.equals(Material.WRITTEN_BOOK) || itemType.equals(Material.WRITABLE_BOOK)) {
             event.setCancelled(true);
         }
@@ -40,9 +42,12 @@ public class MuteListener implements Listener {
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        if (userService.getUser(player.getName()).getReputation() > 1500) return;
-        Material itemType = event.getItemDrop().getItemStack().getType();
 
+        if (userService.getUser(player.getName()).getReputation() > 1500) {
+            return;
+        }
+
+        Material itemType = event.getItemDrop().getItemStack().getType();
         if (itemType.equals(Material.WRITTEN_BOOK) || itemType.equals(Material.WRITABLE_BOOK)) {
             PlayerUtil.sendMessage(player, (String) configService.get("muted-chat-message"));
             event.setCancelled(true);
@@ -52,7 +57,11 @@ public class MuteListener implements Listener {
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
         Player player = event.getPlayer();
-        if (userService.getUser(player.getName()).getReputation() > 1000) return;
+
+        if (userService.getUser(player.getName()).getReputation() > 1000) {
+            return;
+        }
+
         PlayerUtil.sendMessage(player, (String) configService.get("muted-chat-message"));
         event.setCancelled(true);
     }
