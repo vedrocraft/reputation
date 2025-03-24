@@ -1,0 +1,7 @@
+name: reputation
+version: '1.0-SNAPSHOT'
+main: ru.neroduckale.reputation.Reputation
+api-version: '1.20'
+authors: [ neroduckale, neroduckale, neroduckale, neroduckale, Divine ]
+description: nahui ya suda polez
+website: neroduck.ru
