@@ -7,3 +7,5 @@ description: nahui ya suda polez
 website: neroduck.ru
 depend:
   - LiteBans
+softdepend:
+  - PlaceholderAPI

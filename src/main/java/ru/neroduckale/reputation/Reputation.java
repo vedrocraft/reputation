@@ -7,6 +7,7 @@ import ru.neroduckale.reputation.listener.MuteListener;
 import ru.neroduckale.reputation.listener.PreJoinListener;
 import ru.neroduckale.reputation.listener.PunishmentListener;
 import ru.neroduckale.reputation.model.ReputationUser;
+import ru.neroduckale.reputation.placeholder.ReputationPlaceholder;
 import ru.neroduckale.reputation.service.ReputationUserService;
 import ru.neroduckale.reputation.service.impl.ReputationUserServiceImpl;
 import ru.sema1ary.vedrocraftapi.BaseCommons;
@@ -54,6 +55,12 @@ public final class Reputation extends JavaPlugin implements BaseCommons {
                 getService(ConfigService.class),
                 getService(ReputationUserService.class)
         ));
+
+        if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new ReputationPlaceholder(
+                    getService(ReputationUserService.class)
+            ).register();
+        }
     }
 
     @Override
