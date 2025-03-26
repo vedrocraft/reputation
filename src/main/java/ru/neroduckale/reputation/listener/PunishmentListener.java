@@ -21,6 +21,10 @@ public class PunishmentListener extends Events.Listener {
 
         int amount = configService.get("reputation-remove-amount");
 
+        if (userService.getUser(username).getReputation() < amount) {
+            return;
+        }
+
         userService.removeReputation(username, amount);
         PlayerUtil.sendMessage(username,
                 ((String) configService.get("get-punishment-message")).replace("{amount}", String.valueOf(amount))
