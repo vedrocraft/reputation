@@ -65,7 +65,7 @@ public class ReputationCommand {
 
     @Async
     @Execute
-    @Permission("reputation.get")
+    @Permission("reputation.get.other")
     void getReputation(@Context CommandSender sender, @Arg("игрок") Player target) {
         PlayerUtil.sendMessage(sender, ((String) configService.get("reputation-get-message"))
                 .replace("{user}", target.getName())

@@ -1,9 +1,11 @@
 package ru.neroduckale.reputation;
 
+import litebans.api.Events;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.neroduckale.reputation.command.ReputationCommand;
 import ru.neroduckale.reputation.listener.MuteListener;
 import ru.neroduckale.reputation.listener.PreJoinListener;
+import ru.neroduckale.reputation.listener.PunishmentListener;
 import ru.neroduckale.reputation.model.ReputationUser;
 import ru.neroduckale.reputation.service.ReputationUserService;
 import ru.neroduckale.reputation.service.impl.ReputationUserServiceImpl;
@@ -47,6 +49,11 @@ public final class Reputation extends JavaPlugin implements BaseCommons {
                         getService(ReputationUserService.class))
                 )
                 .build();
+
+        Events.get().register(new PunishmentListener(
+                getService(ConfigService.class),
+                getService(ReputationUserService.class)
+        ));
     }
 
     @Override

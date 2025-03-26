@@ -5,3 +5,5 @@ api-version: '1.20'
 authors: [ neroduckale, neroduckale, neroduckale, neroduckale, Divine ]
 description: nahui ya suda polez
 website: neroduck.ru
+depend:
+  - LiteBans

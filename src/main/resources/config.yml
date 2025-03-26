@@ -13,4 +13,7 @@
   reputation-get-message: 'Репутация {user}: {amount}'
   muted-chat-message: '<red>У вас недостаточно репутации для данного действия.'
 
+  reputation-remove-amount: 250
+  get-punishment-message: '<red>Вас наказали, репутация снижена на {amount}'
+
 
