@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import ru.neroduckale.reputation.service.LocalizationService;
 import ru.neroduckale.reputation.service.ReputationUserService;
 import ru.sema1ary.vedrocraftapi.player.PlayerUtil;
-import ru.sema1ary.vedrocraftapi.service.ConfigService;
 
 @RequiredArgsConstructor
 public class MuteListener implements Listener {

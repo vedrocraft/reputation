@@ -37,7 +37,7 @@ public class ReputationCommand {
     @Permission("reputation.add")
     void addReputation(@Context CommandSender sender, @Arg("игрок") Player target, @Arg("количество") int amount) {
         userService.addReputation(target.getName(), amount);
-        PlayerUtil.sendMessage(sender, ((String) localizationService.get("successful-added-reputation-message", localizationService.getLang(sender)))
+        PlayerUtil.sendMessage(sender, localizationService.get("successful-added-reputation-message", localizationService.getLang(sender))
                 .replace("{user}", target.getName())
                 .replace("{amount}", String.valueOf(amount)));
     }
