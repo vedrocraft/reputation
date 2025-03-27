@@ -1,0 +1,6 @@
+﻿successful-added-reputation-message: "<green>You sucessfully added {amount} reputatuion to {user}."
+successful-removed-reputation-message: "<green>You sucessfully removed {amount} {user}'s of reputatuion."
+failed-removed-reputation-message: "<red>{user} doesn't have enough reputation."
+reputation-get-message: "{user}'s reputation: {amount}"
+muted-chat-message: "<red>You don't have enough reputation for this action."
+get-punishment-message: '<red>You have been punished, and your reputation has been reduced by {amount}'

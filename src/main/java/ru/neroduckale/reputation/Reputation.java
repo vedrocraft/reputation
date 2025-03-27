@@ -8,7 +8,9 @@ import ru.neroduckale.reputation.listener.PreJoinListener;
 import ru.neroduckale.reputation.listener.PunishmentListener;
 import ru.neroduckale.reputation.model.ReputationUser;
 import ru.neroduckale.reputation.placeholder.ReputationPlaceholder;
+import ru.neroduckale.reputation.service.LocalizationService;
 import ru.neroduckale.reputation.service.ReputationUserService;
+import ru.neroduckale.reputation.service.impl.LocalizationServiceImpl;
 import ru.neroduckale.reputation.service.impl.ReputationUserServiceImpl;
 import ru.sema1ary.vedrocraftapi.BaseCommons;
 import ru.sema1ary.vedrocraftapi.command.LiteCommandBuilder;
@@ -34,6 +36,7 @@ public final class Reputation extends JavaPlugin implements BaseCommons {
         ServiceManager.registerService(ReputationUserService.class, new ReputationUserServiceImpl(
                 getDao(ReputationUser.class)
         ));
+        ServiceManager.registerService(LocalizationService.class, new LocalizationServiceImpl(this, getService(ReputationUserService.class)));
 
         getServer().getPluginManager().registerEvents(new PreJoinListener(
                 getService(ReputationUserService.class)
@@ -41,18 +44,22 @@ public final class Reputation extends JavaPlugin implements BaseCommons {
 
         getServer().getPluginManager().registerEvents(new MuteListener(
                 getService(ConfigService.class),
+                getService(LocalizationService.class),
                 getService(ReputationUserService.class)
         ), this);
 
         LiteCommandBuilder.builder()
                 .commands(new ReputationCommand(
                         getService(ConfigService.class),
-                        getService(ReputationUserService.class))
+                        getService(LocalizationService.class),
+                        getService(ReputationUserService.class)
+                        )
                 )
                 .build();
 
         Events.get().register(new PunishmentListener(
                 getService(ConfigService.class),
+                getService(LocalizationService.class),
                 getService(ReputationUserService.class)
         ));
 

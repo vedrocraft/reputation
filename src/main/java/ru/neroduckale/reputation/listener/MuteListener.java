@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import ru.neroduckale.reputation.service.LocalizationService;
 import ru.neroduckale.reputation.service.ReputationUserService;
 import ru.sema1ary.vedrocraftapi.player.PlayerUtil;
 import ru.sema1ary.vedrocraftapi.service.ConfigService;
@@ -16,12 +17,14 @@ import ru.sema1ary.vedrocraftapi.service.ConfigService;
 @RequiredArgsConstructor
 public class MuteListener implements Listener {
     private final ConfigService configService;
+    private final LocalizationService localizationService;
     private final ReputationUserService userService;
 
     @EventHandler
     public void onChat(AsyncChatEvent event) {
-        if (userService.getUser(event.getPlayer().getName()).getReputation() <= 3000) {
-            PlayerUtil.sendMessage(event.getPlayer(), (String) configService.get("muted-chat-message"));
+        Player player = event.getPlayer();
+        if (userService.getUser(player.getName()).getReputation() <= 3000) {
+            PlayerUtil.sendMessage(player, localizationService.get("muted-chat-message", localizationService.getLang(player)));
             event.setCancelled(true);
         }
     }
@@ -49,7 +52,7 @@ public class MuteListener implements Listener {
 
         Material itemType = event.getItemDrop().getItemStack().getType();
         if (itemType.equals(Material.WRITTEN_BOOK) || itemType.equals(Material.WRITABLE_BOOK)) {
-            PlayerUtil.sendMessage(player, (String) configService.get("muted-chat-message"));
+            PlayerUtil.sendMessage(player, localizationService.get("muted-chat-message", localizationService.getLang(player)));
             event.setCancelled(true);
         }
     }
@@ -62,7 +65,7 @@ public class MuteListener implements Listener {
             return;
         }
 
-        PlayerUtil.sendMessage(player, (String) configService.get("muted-chat-message"));
+        PlayerUtil.sendMessage(player, localizationService.get("muted-chat-message", localizationService.getLang(player)));
         event.setCancelled(true);
     }
 }

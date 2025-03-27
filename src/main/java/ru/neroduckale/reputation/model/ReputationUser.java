@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.neroduckale.reputation.dao.impl.ReputationUserDaoImpl;
+import ru.neroduckale.reputation.service.Language;
 
 @Data
 @Builder
@@ -22,4 +23,7 @@ public class ReputationUser {
 
     @DatabaseField(canBeNull = false)
     private int reputation;
+
+    @DatabaseField
+    private Language lang;
 }

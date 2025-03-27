@@ -7,13 +7,7 @@
 
   reload-message: '<green>Плагин перезапущен.'
 
-  successful-added-reputation-message: '<green>Вы успешно добавили {user} {amount} репутации.'
-  successful-removed-reputation-message: '<green>Вы успешно отняли {user} {amount} репутации.'
-  failed-removed-reputation-message: '<red>У {user} недостаточно репутации.'
-  reputation-get-message: 'Репутация {user}: {amount}'
-  muted-chat-message: '<red>У вас недостаточно репутации для данного действия.'
-
   reputation-remove-amount: 250
-  get-punishment-message: '<red>Вас наказали, репутация снижена на {amount}'
+
 
 

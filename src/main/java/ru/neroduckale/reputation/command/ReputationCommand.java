@@ -9,6 +9,8 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ru.neroduckale.reputation.service.Language;
+import ru.neroduckale.reputation.service.LocalizationService;
 import ru.neroduckale.reputation.service.ReputationUserService;
 import ru.sema1ary.vedrocraftapi.player.PlayerUtil;
 import ru.sema1ary.vedrocraftapi.service.ConfigService;
@@ -18,6 +20,7 @@ import ru.sema1ary.vedrocraftapi.service.ConfigService;
 public class ReputationCommand {
 
     private final ConfigService configService;
+    private final LocalizationService localizationService;
     private final ReputationUserService userService;
 
     @Async
@@ -25,7 +28,7 @@ public class ReputationCommand {
     @Permission("reputation.reload")
     void reload(@Context CommandSender sender) {
         configService.reload();
-
+        localizationService.reload();
         PlayerUtil.sendMessage(sender, (String) configService.get("reload-message"));
     }
 
@@ -34,9 +37,15 @@ public class ReputationCommand {
     @Permission("reputation.add")
     void addReputation(@Context CommandSender sender, @Arg("игрок") Player target, @Arg("количество") int amount) {
         userService.addReputation(target.getName(), amount);
-        PlayerUtil.sendMessage(sender, ((String) configService.get("successful-added-reputation-message"))
+        PlayerUtil.sendMessage(sender, ((String) localizationService.get("successful-added-reputation-message", localizationService.getLang(sender)))
                 .replace("{user}", target.getName())
                 .replace("{amount}", String.valueOf(amount)));
+    }
+
+    @Async
+    @Execute(name = "setlang")
+    void setLang(@Context Player player, @Arg("язык") Language lang) {
+        userService.setLang(player.getName(), lang);
     }
 
     @Async
@@ -44,13 +53,13 @@ public class ReputationCommand {
     @Permission("reputation.remove")
     void removeReputation(@Context CommandSender sender, @Arg("игрок") Player target, @Arg("количество") int amount) {
         if (userService.getUser(target.getName()).getReputation() < amount) {
-            PlayerUtil.sendMessage(sender, ((String) configService.get("failed-removed-reputation-message"))
+            PlayerUtil.sendMessage(sender, localizationService.get("failed-removed-reputation-message", localizationService.getLang(sender))
                     .replace("{user}", target.getName()));
             return;
         }
 
         userService.removeReputation(target.getName(), amount);
-        PlayerUtil.sendMessage(sender, ((String) configService.get("successful-removed-reputation-message"))
+        PlayerUtil.sendMessage(sender, localizationService.get("successful-removed-reputation-message", localizationService.getLang(sender))
                 .replace("{user}", target.getName())
                 .replace("{amount}", String.valueOf(amount)));
     }
@@ -58,7 +67,7 @@ public class ReputationCommand {
     @Async
     @Execute
     void getReputation(@Context Player sender) {
-        PlayerUtil.sendMessage(sender, ((String) configService.get("reputation-get-message"))
+        PlayerUtil.sendMessage(sender, localizationService.get("reputation-get-message", localizationService.getLang(sender))
                 .replace("{user}", sender.getName())
                 .replace("{amount}", String.valueOf(userService.getUser(sender.getName()).getReputation())));
     }
@@ -67,7 +76,7 @@ public class ReputationCommand {
     @Execute
     @Permission("reputation.get.other")
     void getReputation(@Context CommandSender sender, @Arg("игрок") Player target) {
-        PlayerUtil.sendMessage(sender, ((String) configService.get("reputation-get-message"))
+        PlayerUtil.sendMessage(sender, localizationService.get("reputation-get-message", localizationService.getLang(sender))
                 .replace("{user}", target.getName())
                 .replace("{amount}", String.valueOf(userService.getUser(target.getName()).getReputation())));
     }

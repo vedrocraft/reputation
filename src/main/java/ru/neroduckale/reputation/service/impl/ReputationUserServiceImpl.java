@@ -2,8 +2,10 @@ package ru.neroduckale.reputation.service.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import ru.neroduckale.reputation.dao.ReputationUserDao;
 import ru.neroduckale.reputation.model.ReputationUser;
+import ru.neroduckale.reputation.service.Language;
 import ru.neroduckale.reputation.service.ReputationUserService;
 
 import java.sql.SQLException;
@@ -81,4 +83,13 @@ public class ReputationUserServiceImpl implements ReputationUserService {
         user.setReputation(user.getReputation() - amount);
         save(user);
     }
+
+    @Override
+    public void setLang(@NotNull String username, Language lang) {
+        ReputationUser user = getUser(username);
+        user.setLang(lang);
+        save(user);
+    }
+
+
 }
