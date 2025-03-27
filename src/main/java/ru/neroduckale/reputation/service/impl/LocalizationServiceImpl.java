@@ -40,12 +40,8 @@ public class LocalizationServiceImpl implements LocalizationService {
     public void reload() {
         YamlConfiguration ruConfig = YamlConfiguration.loadConfiguration(ruFile);
         YamlConfiguration enConfig = YamlConfiguration.loadConfiguration(enFile);
-        ruConfig.getKeys(false).forEach((string) -> {
-            ruLocalizationMap.put(string, (String) ruConfig.get(string));
-        });
-        enConfig.getKeys(false).forEach((string) -> {
-            enLocalizationMap.put(string, (String) enConfig.get(string));
-        });
+        ruConfig.getKeys(false).forEach((string) -> ruLocalizationMap.put(string, (String) ruConfig.get(string)));
+        enConfig.getKeys(false).forEach((string) -> enLocalizationMap.put(string, (String) enConfig.get(string)));
 
     }
 

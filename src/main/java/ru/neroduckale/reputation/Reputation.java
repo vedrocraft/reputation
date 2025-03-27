@@ -43,7 +43,6 @@ public final class Reputation extends JavaPlugin implements BaseCommons {
         ), this);
 
         getServer().getPluginManager().registerEvents(new MuteListener(
-                getService(ConfigService.class),
                 getService(LocalizationService.class),
                 getService(ReputationUserService.class)
         ), this);

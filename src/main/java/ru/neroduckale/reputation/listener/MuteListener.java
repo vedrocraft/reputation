@@ -16,7 +16,6 @@ import ru.sema1ary.vedrocraftapi.service.ConfigService;
 
 @RequiredArgsConstructor
 public class MuteListener implements Listener {
-    private final ConfigService configService;
     private final LocalizationService localizationService;
     private final ReputationUserService userService;
 
