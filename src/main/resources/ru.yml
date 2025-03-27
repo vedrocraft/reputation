@@ -4,3 +4,4 @@ failed-removed-reputation-message: '<red>У {user} недостаточно ре
 reputation-get-message: 'Репутация {user}: {amount}'
 muted-chat-message: '<red>У вас недостаточно репутации для данного действия.'
 get-punishment-message: '<red>Вас наказали, репутация снижена на {amount}'
+changed-language-message: '<green>Вы успешно сменили язык на Русский'

@@ -2,6 +2,7 @@ package ru.neroduckale.reputation.service.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -17,122 +18,99 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-
+@Slf4j
 public class LocalizationServiceImpl implements LocalizationService {
 
     private final Plugin plugin;
-    private final HashMap<String, String> ruLocalizationMap = new HashMap<>();
-    private final HashMap<String, String> enLocalizationMap = new HashMap<>();
-    private final String ruFileName = "ru.yml";
-    private final String enFileName = "en.yml";
-    private final File ruFile;
-    private final File enFile;
+    private final HashMap<Language, HashMap<String, String>> localizationMap = new HashMap<>();
+    private final HashMap<Language, String> fileNameMap = new HashMap<>();
+    private final HashMap<Language, File> fileMap = new HashMap<>();
     private final ReputationUserService userService;
 
     public LocalizationServiceImpl(Plugin plugin, ReputationUserService userService) {
         this.plugin = plugin;
         this.userService = userService;
-        ruFile = new File(plugin.getDataFolder(), ruFileName);
-        enFile = new File(plugin.getDataFolder(), enFileName);
+        for (Language language : Language.values()) {
+            localizationMap.put(language, new HashMap<>());
+            fileNameMap.put(language, language.toString().toLowerCase() + ".yml");
+            fileMap.put(language, new File(plugin.getDataFolder(), fileNameMap.get(language)));
+        }
     }
 
     @Override
     public void reload() {
-        YamlConfiguration ruConfig = YamlConfiguration.loadConfiguration(ruFile);
-        YamlConfiguration enConfig = YamlConfiguration.loadConfiguration(enFile);
-        ruConfig.getKeys(false).forEach((string) -> ruLocalizationMap.put(string, (String) ruConfig.get(string)));
-        enConfig.getKeys(false).forEach((string) -> enLocalizationMap.put(string, (String) enConfig.get(string)));
-
+        localizationMap.forEach((language, localizationMap) -> {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(fileMap.get(language));
+            config.getKeys(false).forEach((string) -> localizationMap.put(string, (String) config.get(string)));
+        });
     }
 
     @Override
     public @NonNull String get(@NonNull String key, @NotNull Language language) {
-        if (language == Language.RU) {
-            return ruLocalizationMap.get(key);
-        } else if (language == Language.EN) {
-            return enLocalizationMap.get(key);
+        if (key == null) {
+            throw new NullPointerException("index is marked non-null but is null");
+        } else {
+            String object = localizationMap.get(language).get(key);
+            if (object == null) {
+                log.error("[LocalizationService] {} dont exists!", key);
+                return "[Localization error]";
+            }
+
+            return object;
         }
-        return "[Ошибка локализации]";
     }
 
     @Override
     public void set(@NonNull String key, String value, @NotNull Language language) {
         acceptSet(key, value, language);
-        if (language == Language.RU) {
-            YamlConfiguration ruConfig = YamlConfiguration.loadConfiguration(ruFile);
-            ruConfig.set(key, value);
-            saveRuLocalization(ruConfig);
-        } else if (language == Language.EN) {
-            YamlConfiguration enConfig = YamlConfiguration.loadConfiguration(enFile);
-            enConfig.set(key, value);
-            saveEnLocalization(enConfig);
-        }
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(fileMap.get(language));
+        config.set(key, value);
+        saveLocalization(config, language);
     }
 
     private void acceptSet(@NotNull String key, String value, @NotNull Language language) {
-        if (language == Language.RU) {
-            boolean isContains = ruLocalizationMap.containsKey(key);
-            if (value == null && isContains) {
-                ruLocalizationMap.remove(key);
-                return;
-            }
-
-            if (isContains) {
-                ruLocalizationMap.replace(key, value);
-            } else {
-                ruLocalizationMap.put(key, value);
-            }
-        } else if (language == Language.EN) {
-            boolean isContains = enLocalizationMap.containsKey(key);
-            if (value == null && isContains) {
-                enLocalizationMap.remove(key);
-                return;
-            }
-
-            if (isContains) {
-                enLocalizationMap.replace(key, value);
-            } else {
-                enLocalizationMap.put(key, value);
-            }
+        boolean isContains = localizationMap.get(language).containsKey(key);
+        if (value == null && isContains) {
+            localizationMap.get(language).remove(key);
+            return;
+        }
+        if (isContains) {
+            localizationMap.get(language).replace(key, value);
+        } else {
+            localizationMap.get(language).put(key, value);
         }
     }
 
     @Override
     public boolean isSettingExists(@NonNull String key, @NotNull Language language) {
-        return false;
+        if (key == null) {
+            throw new NullPointerException("index is marked non-null but is null");
+        } else {
+            return localizationMap.get(language).containsKey(key);
+        }
     }
 
     @Override
     public void saveDefaultLocalization() {
-        if (!ruFile.exists()) {
-            plugin.saveResource(ruFileName, false);
-        }
-        if (!enFile.exists()) {
-            plugin.saveResource(enFileName, false);
-        }
+        fileMap.forEach((language, file) -> {
+            if (!file.exists()) plugin.saveResource(fileNameMap.get(language), false);
+        });
     }
 
 
     @Override
     public void enable() {
-        plugin.getLogger().log(Level.ALL, "enable LocalizationService");
+        log.info("[LocalizationService] Starting...");
         saveDefaultLocalization();
         reload();
     }
 
-    public void saveRuLocalization(YamlConfiguration localization) {
+    public void saveLocalization(YamlConfiguration localization, Language language) {
         try {
-            localization.save(ruFile);
+            localization.save(fileMap.get(language));
         } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save config to " + ruFile, ex);
-        }
-    }
-
-    public void saveEnLocalization(YamlConfiguration localization) {
-        try {
-            localization.save(enFile);
-        } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save config to " + enFile, ex);
+            plugin.getLogger().log(Level.SEVERE, "Could not save config to " + fileMap.get(language), ex);
         }
     }
 

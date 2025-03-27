@@ -46,6 +46,7 @@ public class ReputationCommand {
     @Execute(name = "setlang")
     void setLang(@Context Player player, @Arg("язык") Language lang) {
         userService.setLang(player.getName(), lang);
+        PlayerUtil.sendMessage(player, localizationService.get("changed-language-message", localizationService.getLang(player)));
     }
 
     @Async
