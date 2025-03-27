@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -18,7 +19,7 @@ public class MuteListener implements Listener {
     private final ConfigService configService;
     private final ReputationUserService userService;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncChatEvent event) {
         if (userService.getUser(event.getPlayer().getName()).getReputation() <= 3000) {
             PlayerUtil.sendMessage(event.getPlayer(), (String) configService.get("muted-chat-message"));
@@ -26,7 +27,7 @@ public class MuteListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPickup(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player player)
                 || userService.getUser(player.getName()).getReputation() > 1500) {
@@ -39,7 +40,7 @@ public class MuteListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
 
@@ -54,7 +55,7 @@ public class MuteListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSignChange(SignChangeEvent event) {
         Player player = event.getPlayer();
 
